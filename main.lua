@@ -37,6 +37,8 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
+    servingPlayer = 1
+
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
     gameState = 'start'
@@ -47,9 +49,9 @@ function love.keypressed(key)
         love.event.quit()
     elseif key == 'return' then
         if gameState == 'start' then
+            gameState = 'serve'
+        elseif gameState == 'serve' then
             gameState = 'play'
-        else 
-            gameState = 'start'
 
             ball:reset()
         end
@@ -57,7 +59,14 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-    if gameState == 'play' then
+    if gameState == 'serve' then
+        ball.dy = math.random(-50, 50)
+        if servingPlayer == 1 then
+            ball.dx = math.random(140, 200)
+        else
+            ball.dx = -math.random(140, 200)
+        end
+    elseif gameState == 'play' then
         if love.keyboard.isDown('w') then
             player1.dy = -PADDLE_SPEED
         elseif love.keyboard.isDown('s') then
@@ -101,6 +110,20 @@ function love.update(dt)
             end
         end
 
+        if ball.x <= 0 then
+            servingPlayer = 1
+            player2Score = player2Score + 1
+            ball:reset()
+            gameState = 'serve'
+        end
+    
+        if ball.x >= VIRTUAL_WIDTH then
+            servingPlayer = 2
+            player1Score = player1Score + 1
+            ball:reset()
+            gameState = 'serve'
+        end
+
     end
 end
 
@@ -112,8 +135,11 @@ function love.draw()
     love.graphics.setFont(smallFont)
     if gameState == 'start' then
         love.graphics.printf('Hello Start State!', 0, 20, VIRTUAL_WIDTH, 'center')
-    else
-        love.graphics.printf('Hello Play State!', 0, 20, VIRTUAL_WIDTH, 'center')
+    elseif gameState == 'serve' then
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Player ' .. tostring(servingPlayer) .. "'s serve!", 
+            0, 10, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press Enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
     end
 
     love.graphics.setFont(scoreFont)
