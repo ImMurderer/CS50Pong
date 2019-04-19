@@ -4,8 +4,8 @@ push = require 'push'
 require 'Paddle'
 require 'Ball'
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
 
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
@@ -23,6 +23,8 @@ function love.load()
 
     love.graphics.setFont(smallFont)
 
+    love.window.setTitle('Pong')
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
@@ -31,6 +33,9 @@ function love.load()
 
     player1 = Paddle(10, 30, 5, 20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+
+    player1Score = 0
+    player2Score = 0
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
@@ -73,6 +78,29 @@ function love.update(dt)
         player2:update(dt)
 
         ball:update(dt)
+
+        if ball:collides(player1) then
+            ball.dx = -ball.dx * 1.03
+            ball.x = player1.x + 4
+
+            if ball.dy < 0 then
+                ball.dy = -math.random(10, 150)
+            else
+                ball.dy = math.random(10, 150)
+            end
+        end
+
+        if ball:collides(player2) then
+            ball.dx = -ball.dx * 1.03
+            ball.x = player2.x - 4
+
+            if ball.dy < 0 then
+                ball.dy = -math.random(10, 150)
+            else
+                ball.dy = math.random(10, 150)
+            end
+        end
+
     end
 end
 
@@ -96,6 +124,14 @@ function love.draw()
     player2:render()
 
     ball:render()
+
+    displayFPS()
     
     push:apply('end')
+end
+
+function displayFPS()
+    love.graphics.setFont(smallFont)
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
