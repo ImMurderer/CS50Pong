@@ -105,7 +105,7 @@ function love.update(dt)
         ball:update(dt)
 
         if ball:collides(player1) then
-            ball.dx = -ball.dx * 1.2
+            ball.dx = -ball.dx * 1.19
             ball.x = player1.x + 4
             sounds['paddle_hit']:play()
             if ball.dy < 0 then
@@ -116,7 +116,7 @@ function love.update(dt)
         end
 
         if ball:collides(player2) then
-            ball.dx = -ball.dx * 1.2
+            ball.dx = -ball.dx * 1.19
             ball.x = player2.x - 4
             sounds['paddle_hit']:play()
 
