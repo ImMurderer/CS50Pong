@@ -21,6 +21,12 @@ function love.load()
     largeFont = love.graphics.newFont('font.ttf', 16)
     scoreFont = love.graphics.newFont('font.ttf', 32)
 
+    sounds = {
+        ['paddle_hit'] = love.audio.newSource('sounds/hit.wav', 'static'),
+        ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
+        ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static')
+    }
+
     love.graphics.setFont(smallFont)
 
     love.window.setTitle('Pong')
@@ -99,9 +105,9 @@ function love.update(dt)
         ball:update(dt)
 
         if ball:collides(player1) then
-            ball.dx = -ball.dx * 1.03
+            ball.dx = -ball.dx * 1.2
             ball.x = player1.x + 4
-
+            sounds['paddle_hit']:play()
             if ball.dy < 0 then
                 ball.dy = -math.random(10, 150)
             else
@@ -110,8 +116,9 @@ function love.update(dt)
         end
 
         if ball:collides(player2) then
-            ball.dx = -ball.dx * 1.03
+            ball.dx = -ball.dx * 1.2
             ball.x = player2.x - 4
+            sounds['paddle_hit']:play()
 
             if ball.dy < 0 then
                 ball.dy = -math.random(10, 150)
@@ -123,7 +130,7 @@ function love.update(dt)
         if ball.x <= 0 then
             servingPlayer = 1
             player2Score = player2Score + 1
-
+            sounds['score']:play()
             if player2Score == 3 then
                 winningPlayer = 2
                 gameState = 'done'
@@ -135,6 +142,7 @@ function love.update(dt)
     
         if ball.x >= VIRTUAL_WIDTH then
             servingPlayer = 2
+            sounds['score']:play()
             player1Score = player1Score + 1
             if player1Score == 3 then
                 winningPlayer = 1
