@@ -1,8 +1,8 @@
-Class = require 'class'
-push = require 'push'
+Class = require 'libs/class'
+push = require 'libs/push'
 
-require 'Paddle'
-require 'Ball'
+require './objects/Paddle'
+require 'objects/Ball'
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -17,9 +17,9 @@ function love.load()
 
     math.randomseed(os.time())
 
-    smallFont = love.graphics.newFont('font.ttf', 8)
-    largeFont = love.graphics.newFont('font.ttf', 16)
-    scoreFont = love.graphics.newFont('font.ttf', 32)
+    smallFont = love.graphics.newFont('fonts/font.ttf', 8)
+    largeFont = love.graphics.newFont('fonts/font.ttf', 16)
+    scoreFont = love.graphics.newFont('fonts/font.ttf', 32)
 
     sounds = {
         ['paddle_hit'] = love.audio.newSource('sounds/hit.wav', 'static'),
